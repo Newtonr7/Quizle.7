@@ -1,0 +1,22 @@
+/* Essential Design Variables Only */
+:root {
+  /* Colors */
+  --primary: #6C63FF;
+  --success: #00D09C;
+  --error: #FF5C5C;
+  
+  /* Backgrounds */
+  --bg-dark: #121212;
+  --bg-card: #1E1E24;
+  
+  /* Text */
+  --text-primary: #F5F5F7;
+  --text-secondary: #A0A0A0;
+  --border: #333339;
+  
+  /* Effects */
+  --gradient: linear-gradient(135deg, #6C63FF 0%, #3B2BBE 100%);
+  --gradient-success: linear-gradient(135deg, #00D09C 0%, #00A3FF 100%);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  --radius: 14px;
+}

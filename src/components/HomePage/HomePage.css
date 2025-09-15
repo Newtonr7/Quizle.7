@@ -1,0 +1,236 @@
+/*
+.home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-page h2 {
+  margin-bottom: 18px;
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.home-page p {
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--text-secondary);
+  max-width: 600px;
+}
+
+.home-page form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.home-page textarea {
+  width: 100%;
+  min-height: 150px;
+  margin-bottom: 25px;
+  resize: vertical;
+}
+
+.error-message {
+  background: rgba(255, 92, 92, 0.1);
+  color: var(--error);
+  padding: 16px;
+  margin-bottom: 24px;
+  border-radius: var(--radius);
+  border-left: 4px solid var(--error);
+  width: 100%;
+  text-align: center;
+}
+  */
+  /* Modern Home Page - Contemporary Design */
+.home-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 60px 0;
+}
+
+.home-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(108, 99, 255, 0.08) 1px, transparent 0);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  33% { transform: translate(-20px, -20px) rotate(1deg); }
+  66% { transform: translate(20px, -10px) rotate(-1deg); }
+}
+
+/* Modern typography with better spacing */
+.home-page h2 {
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 800;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--primary) 0%, #8B85FF 50%, var(--success) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.home-page p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+  max-width: 520px;
+  text-align: center;
+}
+
+/* Modern form with glassmorphism effect */
+.home-page form {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+/* Modern textarea with better UX */
+.home-page textarea {
+  width: 100%;
+  min-height: 160px;
+  margin-bottom: 32px;
+  resize: vertical;
+  font-size: 16px;
+  line-height: 1.5;
+  border: 2px solid var(--border);
+  background: rgba(30, 30, 36, 0.8);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.home-page textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.1);
+  background: rgba(30, 30, 36, 0.95);
+}
+
+.home-page textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* Modern button with micro-interactions */
+.home-page button {
+  position: relative;
+  background: var(--gradient);
+  border: none;
+  padding: 18px 36px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 8px 32px rgba(108, 99, 255, 0.3);
+  overflow: hidden;
+  min-width: 200px;
+}
+
+.home-page button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s;
+}
+
+.home-page button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(108, 99, 255, 0.4);
+}
+
+.home-page button:hover::before {
+  left: 100%;
+}
+
+.home-page button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Loading state with modern spinner */
+.home-page button:disabled {
+  background: rgba(108, 99, 255, 0.6);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Modern error message with better visibility */
+.error-message {
+  background: rgba(255, 92, 92, 0.08);
+  border: 1px solid rgba(255, 92, 92, 0.2);
+  color: #FF8A8A;
+  padding: 16px 20px;
+  margin-bottom: 32px;
+  border-radius: 12px;
+  border-left: 4px solid var(--error);
+  width: 100%;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  font-weight: 500;
+}
+
+/* Add subtle hover effect to form container */
+.home-page form:hover .home-page textarea:not(:focus) {
+  border-color: rgba(108, 99, 255, 0.3);
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .home-page {
+    padding: 40px 20px;
+  }
+  
+  .home-page h2 {
+    font-size: 32px;
+  }
+  
+  .home-page p {
+    font-size: 16px;
+    margin-bottom: 36px;
+  }
+  
+  .home-page textarea {
+    min-height: 140px;
+    font-size: 16px;
+  }
+  
+  .home-page button {
+    width: 100%;
+    padding: 16px 24px;
+  }
+}
