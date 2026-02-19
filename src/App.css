@@ -1,6 +1,7 @@
 /* Import all styles */
 @import './styles/variables.css';
 @import './styles/globals.css';
+@import './styles/animations.css';
 
 /* App specific styles */
 .App {
@@ -27,4 +28,9 @@
 
 .App-header p {
   color: var(--text-secondary);
+}
+
+/* Page transition */
+main > * {
+  animation: fadeIn 0.4s ease-out;
 }

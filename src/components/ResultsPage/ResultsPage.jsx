@@ -2,33 +2,27 @@ import React from 'react';
 import './ResultsPage.css';
 
 function ResultPage({ quizData, userAnswers, onRestart, onNewQuiz }) {
-  // Calculate correct answers by comparing the users answer to the correct answer
   const correctAnswers = userAnswers.reduce((total, userAnswer, index) => {
     return userAnswer === quizData[index].correctAnswerIndex ? total + 1 : total;
   }, 0);
 
-  // Calculate percentage by dividing correct answer by the total questions and multiplying by 100
   const percentage = Math.round((correctAnswers / quizData.length) * 100);
 
-  // Determine message based on score using if else statements 
-  // ***this could end up being turned into a switch statement but for now this works fine***
   let message = '';
   if (percentage >= 90) {
-    message = 'Excellent! Youre a quiz master!';
+    message = "Excellent! You're a quiz master!";
   } else if (percentage >= 70) {
     message = 'Great job! You know your stuff!';
   } else if (percentage >= 50) {
-    message = 'Not bad! Youve got a good foundation.';
+    message = "Not bad! You've got a good foundation.";
   } else {
-    message = 'Keep learning! Youll do better next time.';
+    message = "Keep learning! You'll do better next time.";
   }
 
-  // this function gave me some trouble but realised it was a simple fix
   const handleRestartSameQuiz = () => {
-    // Logic to restart the same quiz with the same questions
     onRestart(quizData);
   };
-  // Logic to start a new quiz with new questions
+
   const handleStartNewQuiz = () => {
     onNewQuiz();
   };
