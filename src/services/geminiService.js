@@ -35,37 +35,28 @@ export async function generateQuiz(factsText) {
       return mockQuizData;
     }
 
-    const prompt = `
-      You are a quiz master. Create a multiple choice quiz based on the following facts:
-      ${factsText}
+    const prompt = `You are a quiz generator for students reviewing their notes.
 
-   Create 1 challenging question based on each submitted facts.
+Create a multiple choice quiz from the following study material:
+${factsText}
 
-For each question:
-1. Generate 4 answer choices (A, B, C, D) with ONE correct answer and THREE plausible distractors.
-2. Ensure all answer choices are approximately the same length to avoid giving unintentional clues.
-3. Make distractors plausible by using related concepts or definitions.
-4. The correct answer must accurately match the submitted fact.
-5. Design questions that test deeper understanding rather than simple recall.
-6. Format questions clearly with the question text followed by the 4 answer choices.
-7. Vary the position of the correct answer (don't always make it option A, B, C, or D).
-8. each question should be based on the facts definition and the answers should be the names of the facts.
-9. The questions need to be challenging and require critical thinking.
-10. The answers can be other fact names that are not the same as the question but are listed in the input, this will make the quiz more challenging.
-11. DO NOT MAKE THE ANSWERS TO THE QUESTIONS THE LONGEST LENGTH, THIS WILL GIVE AWAY THE ANSWER.
-12. The questions for the quiz should match the amount of facts provided in the input.
-This quiz is intended to challenge knowledgeable students with subtly difficult distinctions between answer choices.
-      Format your response as a JSON array of question objects with this structure:
-      [
-        {
-          "question": "Question text here?",
-          "options": ["Option A", "Option B", "Option C", "Option D"],
-          "correctAnswerIndex": 0
-        }
-      ]
+Rules:
+1. Generate exactly 1 question per distinct fact or concept in the input.
+2. Mix question styles — some should test recall (e.g., "What is...?") and others should test application (e.g., "Which of the following describes...?" or "A student observes X. This is an example of...?").
+3. Each question has 4 answer choices with exactly 1 correct answer.
+4. Make distractors plausible — use related terms, similar concepts, or common misconceptions from the same subject area.
+5. Keep all answer choices similar in length and detail.
+6. Randomize the position of the correct answer across questions.
+7. Difficulty should be appropriate for a study review session — challenging enough to confirm understanding, not trick questions.
 
-      Only return the JSON array, no explanations or other text.
-    `;
+Return ONLY a JSON array with this exact structure, no other text:
+[
+  {
+    "question": "Question text here?",
+    "options": ["Option A", "Option B", "Option C", "Option D"],
+    "correctAnswerIndex": 0
+  }
+]`;
 
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
