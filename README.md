@@ -1,6 +1,6 @@
 # Quizle
 
-An AI-powered quiz generator that creates custom multiple-choice quizzes from any facts or information you provide. Built with React and the Google Gemini API.
+An AI-powered quiz generator that creates custom multiple-choice quizzes from any facts or information you provide. Built with React, Supabase and the Groq API (Llama 3.3 70B).
 
 **[Live Demo](https://newtonr7.github.io/Quizle.7)**
 
@@ -18,7 +18,7 @@ An AI-powered quiz generator that creates custom multiple-choice quizzes from an
 
 - **React 19** — UI framework with hooks-based state management
 - **React Router** — Client-side routing with HashRouter for GitHub Pages compatibility
-- **Google Gemini API** — AI-powered quiz question generation (Gemini 2.0 Flash)
+- **Groq API** — AI-powered quiz question generation (Llama 3.3 70B)
 - **Supabase** — Authentication and PostgreSQL database for quiz/score persistence
 - **CSS** — Custom styling with CSS variables, animations, and responsive design
 
@@ -27,7 +27,7 @@ An AI-powered quiz generator that creates custom multiple-choice quizzes from an
 ### Prerequisites
 
 - Node.js 18+
-- A Google Gemini API key ([Get one here](https://aistudio.google.com/apikey))
+- A Groq API key ([Get one here](https://console.groq.com))
 - A Supabase project ([Create one here](https://supabase.com))
 
 ### Installation
@@ -43,7 +43,7 @@ npm install
 Create a `.env` file in the project root:
 
 ```
-REACT_APP_GEMINI_API_KEY=your_gemini_api_key
+REACT_APP_GROQ_API_KEY=your_groq_api_key
 REACT_APP_SUPABASE_URL=your_supabase_project_url
 REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
@@ -108,7 +108,7 @@ npm run deploy
 
 You'll need to add these secrets in your GitHub repo settings (Settings → Secrets → Actions):
 
-- `REACT_APP_GEMINI_API_KEY`
+- `REACT_APP_GROQ_API_KEY`
 - `REACT_APP_SUPABASE_URL`
 - `REACT_APP_SUPABASE_ANON_KEY`
 
@@ -116,13 +116,13 @@ You'll need to add these secrets in your GitHub repo settings (Settings → Secr
 
 Some things I learned and decisions I made while building this project:
 
-- Used mock quiz data during development to avoid burning API tokens — this made iteration much faster and let me focus on building the UI without worrying about rate limits.
+- Used mock quiz data during development to avoid burning API tokens — this made iteration much faster and let me focus on building the UI without worrying about rate limits. I still managed to burn through them though!
 
-- Chose Gemini 2.0 Flash over Pro for cost-effectiveness since quiz generation doesn't need the most powerful model. Flash is fast and cheap, which is perfect for this use case.
+- Originally used Gemini 2.0 Flash for quiz generation, but switched to Groq (Llama 3.3 70B) after Google removed free tier access for the Gemini API. Groq's free tier is generous and Llama 3.3 70B handles quiz generation just as well.
 
-- Implemented nested try-catch in the Gemini service because LLM responses can be unpredictable — the outer catch handles API failures while the inner catch handles JSON parsing errors, both falling back to mock data so the app never crashes.
+- Implemented nested try-catch in the quiz generation service because LLM responses can be unpredictable — the outer catch handles API failures while the inner catch handles JSON parsing errors, both falling back to mock data so the app never crashes.
 
-- React StrictMode helped catch issues early in development by flagging potential problems like side effects in render and deprecated patterns.
+- React StrictMode helped catch issues early in development by flagging potential problems like side effects in render and patterns.
 
 - Added a 1.5-second feedback delay on quiz answers to give users time to see if they got it right before auto-advancing. Without the delay, the transition felt too abrupt.
 
@@ -130,9 +130,13 @@ Some things I learned and decisions I made while building this project:
 
 - Used `try-catch` with `finally` to always reset the loading state in the quiz generation form. This ensures the button re-enables even if something goes wrong, which is important for a good user experience.
 
-- Understanding async/await for the API calls was a key learning moment — wrapping the Gemini API call in an async function and properly awaiting the response before processing it.
+- Understanding async/await for the API calls was a key learning moment — wrapping the API call in an async function and properly awaiting the response before processing it. This took alot of review and tutorial help to understand what I needed to incorperate and why it is important.
 
 - Refactored from manual `currentPage` state to React Router to support browser back/forward navigation and direct URL access. Chose HashRouter because GitHub Pages doesn't support server-side rewrites for client-side routing.
+
+## Update — Switched from Gemini to Groq
+
+As of February 2026, Google removed free tier access for the Gemini API (all models return `limit: 0` on free tier quotas). Since this project relies on free API access, I switched the quiz generation backend from Google Gemini 2.0 Flash to Groq running Llama 3.3 70B. Groq offers a generous free tier (30 requests/min) and the quiz quality is just as good. No new packages were needed — the service now uses `fetch` directly against Groq's OpenAI-compatible REST API instead of the `@google/generative-ai` SDK.
 
 ## Author
 

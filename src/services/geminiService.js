@@ -1,5 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 // Mock quiz data for development and API fallback
 const mockQuizData = [
   {
@@ -31,14 +29,11 @@ const mockQuizData = [
 
 export async function generateQuiz(factsText) {
   try {
-    const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
+    const apiKey = process.env.REACT_APP_GROQ_API_KEY;
 
     if (!apiKey) {
       return mockQuizData;
     }
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const prompt = `
       You are a quiz master. Create a multiple choice quiz based on the following facts:
@@ -72,9 +67,25 @@ This quiz is intended to challenge knowledgeable students with subtly difficult 
       Only return the JSON array, no explanations or other text.
     `;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.7
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Groq API error: ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    const text = data.choices[0].message.content;
 
     let jsonMatch = text.match(/(\[\s*\{.*\}\s*\])/s);
     let jsonText = jsonMatch ? jsonMatch[0] : text;
@@ -94,7 +105,7 @@ This quiz is intended to challenge knowledgeable students with subtly difficult 
       return mockQuizData;
     }
   } catch (error) {
-    console.error('Gemini API error:', error);
+    console.error('Groq API error:', error);
     return mockQuizData;
   }
 }
