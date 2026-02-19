@@ -11,14 +11,27 @@
   z-index: 100;
 }
 
+.nav-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--gradient);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.nav-logo:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.4);
+}
+
 .nav-logo span {
   font-weight: 700;
-  font-size: 20px;
-  background: var(--gradient);
- -webkit-background-clip: text;
-background-clip: text;
--webkit-text-fill-color: transparent;
-color: transparent;
+  font-size: 18px;
+  color: rgba(30, 30, 36, 0.9);
 }
 
 .nav-auth {

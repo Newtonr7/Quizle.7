@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../Hooks/useAuth';
 import './NavBar.css';
 
-// Navigation bar component with authentication
-// Handles sign in, sign up, and sign out
 const NavBar = ({ user }) => {
   const { signIn, signUp, signOut } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -13,15 +12,24 @@ const NavBar = ({ user }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Handle authentication form submission
-  // This function manages both sign in and sign up based on the isSignUp state
+  // Close modal on Escape key
+  useEffect(() => {
+    if (!showAuthModal) return;
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setShowAuthModal(false);
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showAuthModal]);
+
   const handleAuth = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
-    // The await is for waiting the response from the signIn or signUp function 
-    // This is defined in the useAuth hook
-    const { error } = isSignUp 
+
+    const { error } = isSignUp
       ? await signUp(email, password)
       : await signIn(email, password);
 
@@ -34,7 +42,7 @@ const NavBar = ({ user }) => {
     }
     setLoading(false);
   };
-// The sign out function
+
   const handleSignOut = () => {
     signOut();
   };
@@ -42,10 +50,10 @@ const NavBar = ({ user }) => {
   return (
     <>
       <nav className="nav-bar">
-        <a href="/" className="nav-logo">
-          <span>Quizle</span>
-        </a>
-        
+        <Link to="/" className="nav-logo">
+          <span>Q</span>
+        </Link>
+
         <div className="nav-auth">
           {user ? (
             <>
@@ -55,8 +63,8 @@ const NavBar = ({ user }) => {
               </button>
             </>
           ) : (
-            <button 
-              className="sign-in-btn" 
+            <button
+              className="sign-in-btn"
               onClick={() => setShowAuthModal(true)}
             >
               Sign In
@@ -65,14 +73,13 @@ const NavBar = ({ user }) => {
         </div>
       </nav>
 
-      {/* Auth Modal */}
       {showAuthModal && (
         <div className="modal-overlay" onClick={() => setShowAuthModal(false)}>
           <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
             <h3>{isSignUp ? 'Create Account' : 'Sign In'}</h3>
-            
+
             {error && <div className="error-message">{error}</div>}
-            
+
             <form onSubmit={handleAuth}>
               <input
                 type="email"
@@ -93,18 +100,18 @@ const NavBar = ({ user }) => {
                 {loading ? 'Please wait...' : (isSignUp ? 'Create Account' : 'Sign In')}
               </button>
             </form>
-            
+
             <p>
               {isSignUp ? 'Have an account?' : 'Need an account?'}{' '}
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="link-btn"
                 onClick={() => setIsSignUp(!isSignUp)}
               >
                 {isSignUp ? 'Sign In' : 'Sign Up'}
               </button>
             </p>
-            
+
             <button className="close-btn" onClick={() => setShowAuthModal(false)}>
               x
             </button>
