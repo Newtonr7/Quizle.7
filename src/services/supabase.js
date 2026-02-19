@@ -33,7 +33,10 @@ export const quizzes = {
     supabase ? supabase.from('quizzes').insert({ user_id: userId, title, questions }) : noOp(),
 
   getUserQuizzes: (userId) =>
-    supabase ? supabase.from('quizzes').select('*').eq('user_id', userId) : noOp(),
+    supabase ? supabase.from('quizzes').select('*').eq('user_id', userId).order('created_at', { ascending: false }) : noOp(),
+
+  getUserAttempts: (userId) =>
+    supabase ? supabase.from('attempts').select('*').eq('user_id', userId) : noOp(),
 
   saveAttempt: (userId, quizId, score) =>
     supabase ? supabase.from('attempts').insert({ user_id: userId, quiz_id: quizId, score }) : noOp(),

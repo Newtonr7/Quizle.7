@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../Hooks/useAuth';
 import './NavBar.css';
 
-const NavBar = ({ user }) => {
+const NavBar = ({ user, onMyQuizzes }) => {
   const { signIn, signUp, signOut } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
@@ -58,6 +58,9 @@ const NavBar = ({ user }) => {
           {user ? (
             <>
               <span className="user-email">{user.email.split('@')[0]}</span>
+              <button className="my-quizzes-btn" onClick={onMyQuizzes}>
+                My Quizzes
+              </button>
               <button className="sign-out-btn" onClick={handleSignOut}>
                 Sign Out
               </button>

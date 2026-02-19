@@ -7,6 +7,7 @@ import NavBar from './components/NavBar/NavBar';
 import HomePage from './components/HomePage/HomePage';
 import QuizPage from './components/QuizPage/QuizPage';
 import ResultPage from './components/ResultsPage/ResultsPage';
+import MyQuizzesPage from './components/MyQuizzesPage/MyQuizzesPage';
 import Toast from './components/Toast/Toast';
 
 function AppContent() {
@@ -77,9 +78,20 @@ function AppContent() {
     navigate('/');
   };
 
+  const retakeQuiz = (quizId, questions) => {
+    setQuizData(questions);
+    setCurrentQuizId(quizId);
+    setUserAnswers([]);
+    navigate('/quiz');
+  };
+
+  const goToMyQuizzes = () => {
+    navigate('/my-quizzes');
+  };
+
   return (
     <>
-      <NavBar user={user} />
+      <NavBar user={user} onMyQuizzes={goToMyQuizzes} />
       <div className="App">
         <header className="App-header">
           <h1>Quizle</h1>
@@ -106,6 +118,18 @@ function AppContent() {
                       onRestart={restartQuiz}
                       onNewQuiz={goToHome}
                       user={user}
+                    />
+                  : <Navigate to="/" replace />
+              }
+            />
+            <Route
+              path="/my-quizzes"
+              element={
+                user
+                  ? <MyQuizzesPage
+                      user={user}
+                      onRetakeQuiz={retakeQuiz}
+                      onNavigateHome={goToHome}
                     />
                   : <Navigate to="/" replace />
               }
