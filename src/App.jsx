@@ -15,7 +15,6 @@ function AppContent() {
   const navigate = useNavigate();
   const [quizData, setQuizData] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
-  const [currentQuizId, setCurrentQuizId] = useState(null);
   const [toast, setToast] = useState(null);
 
   const showToast = useCallback((message) => {
@@ -33,40 +32,15 @@ function AppContent() {
     );
   }
 
-  const goToQuiz = async (generatedQuiz) => {
+  const goToQuiz = (generatedQuiz) => {
     setQuizData(generatedQuiz);
     setUserAnswers([]);
     navigate('/quiz');
-
-    if (user) {
-      try {
-        const title = `Quiz - ${new Date().toLocaleDateString()}`;
-        const { data } = await quizzes.save(user.id, title, generatedQuiz);
-        if (data?.[0]) {
-          setCurrentQuizId(data[0].id);
-          showToast('Quiz saved!');
-        }
-      } catch (error) {
-        // Quiz save failed silently — user can still take the quiz
-      }
-    }
   };
 
-  const goToResults = async (answers) => {
+  const goToResults = (answers) => {
     setUserAnswers(answers);
     navigate('/results');
-
-    if (user && currentQuizId) {
-      try {
-        const score = answers.reduce((total, userAnswer, index) => {
-          return userAnswer === quizData[index].correctAnswerIndex ? total + 1 : total;
-        }, 0);
-        await quizzes.saveAttempt(user.id, currentQuizId, score);
-        showToast('Score saved!');
-      } catch (error) {
-        // Attempt save failed silently — results still display
-      }
-    }
   };
 
   const restartQuiz = () => {
@@ -74,15 +48,28 @@ function AppContent() {
   };
 
   const goToHome = () => {
-    setCurrentQuizId(null);
     navigate('/');
   };
 
   const retakeQuiz = (quizId, questions) => {
     setQuizData(questions);
-    setCurrentQuizId(quizId);
     setUserAnswers([]);
     navigate('/quiz');
+  };
+
+  const saveQuiz = async (quizName) => {
+    const score = userAnswers.reduce((total, userAnswer, index) => {
+      return userAnswer === quizData[index].correctAnswerIndex ? total + 1 : total;
+    }, 0);
+
+    const { data, error } = await quizzes.save(user.id, quizName, quizData);
+    if (error) throw error;
+
+    const quizId = data[0].id;
+    const attemptResult = await quizzes.saveAttempt(user.id, quizId, score);
+    if (attemptResult.error) throw attemptResult.error;
+
+    showToast('Quiz saved!');
   };
 
   const goToMyQuizzes = () => {
@@ -118,6 +105,7 @@ function AppContent() {
                       onRestart={restartQuiz}
                       onNewQuiz={goToHome}
                       user={user}
+                      onSaveQuiz={saveQuiz}
                     />
                   : <Navigate to="/" replace />
               }
