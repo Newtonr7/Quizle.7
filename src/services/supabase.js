@@ -30,7 +30,7 @@ export const auth = {
 
 export const quizzes = {
   save: (userId, title, questions) =>
-    supabase ? supabase.from('quizzes').insert({ user_id: userId, title, questions }) : noOp(),
+    supabase ? supabase.from('quizzes').insert({ user_id: userId, title, questions }).select() : noOp(),
 
   getUserQuizzes: (userId) =>
     supabase ? supabase.from('quizzes').select('*').eq('user_id', userId).order('created_at', { ascending: false }) : noOp(),

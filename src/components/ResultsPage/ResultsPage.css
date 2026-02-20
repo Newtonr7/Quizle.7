@@ -132,3 +132,73 @@
 .incorrect-marker {
   color: var(--error);
 }
+
+/* Save Quiz Section */
+.save-quiz-section {
+  text-align: center;
+  padding: 24px;
+  margin-bottom: 10px;
+  background: rgba(30, 30, 36, 0.5);
+  border-radius: var(--radius);
+}
+
+.save-quiz-btn {
+  background: var(--gradient);
+  min-width: 180px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.save-quiz-form {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+}
+
+.save-quiz-input {
+  flex: 1;
+  max-width: 400px;
+}
+
+.save-quiz-confirm {
+  background: var(--gradient);
+  min-width: 100px;
+  height: 48px;
+  font-weight: 600;
+}
+
+.save-quiz-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.save-quiz-success {
+  color: var(--success);
+  font-weight: 600;
+  font-size: 16px;
+  margin: 0;
+}
+
+.save-quiz-error {
+  color: var(--error);
+  font-size: 14px;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+  .save-quiz-form {
+    flex-direction: column;
+  }
+
+  .save-quiz-input {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .save-quiz-confirm {
+    width: 100%;
+  }
+}

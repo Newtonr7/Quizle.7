@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './ResultsPage.css';
 
-function ResultPage({ quizData, userAnswers, onRestart, onNewQuiz }) {
+function ResultPage({ quizData, userAnswers, onRestart, onNewQuiz, user, onSaveQuiz }) {
+  const [saveState, setSaveState] = useState('idle');
+  const [quizName, setQuizName] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
+
   const correctAnswers = userAnswers.reduce((total, userAnswer, index) => {
     return userAnswer === quizData[index].correctAnswerIndex ? total + 1 : total;
   }, 0);
@@ -18,6 +22,34 @@ function ResultPage({ quizData, userAnswers, onRestart, onNewQuiz }) {
   } else {
     message = "Keep learning! You'll do better next time.";
   }
+
+  const handleSaveClick = () => {
+    setSaveState('naming');
+    setErrorMsg('');
+  };
+
+  const handleConfirmSave = async () => {
+    if (!quizName.trim()) return;
+    setSaveState('saving');
+    setErrorMsg('');
+    try {
+      await onSaveQuiz(quizName.trim());
+      setSaveState('saved');
+    } catch (error) {
+      setErrorMsg('Failed to save quiz. Please try again.');
+      setSaveState('error');
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      handleConfirmSave();
+    } else if (e.key === 'Escape') {
+      setSaveState('idle');
+      setQuizName('');
+      setErrorMsg('');
+    }
+  };
 
   const handleRestartSameQuiz = () => {
     onRestart(quizData);
@@ -43,6 +75,49 @@ function ResultPage({ quizData, userAnswers, onRestart, onNewQuiz }) {
 
         <p className="result-message">{message}</p>
       </div>
+
+      {user && saveState !== 'saved' && (
+        <div className="save-quiz-section">
+          {saveState === 'idle' && (
+            <button className="save-quiz-btn" onClick={handleSaveClick}>
+              Save Quiz
+            </button>
+          )}
+
+          {(saveState === 'naming' || saveState === 'saving' || saveState === 'error') && (
+            <div className="save-quiz-form">
+              <input
+                type="text"
+                className="save-quiz-input"
+                placeholder="Enter a name for this quiz"
+                value={quizName}
+                onChange={(e) => setQuizName(e.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={saveState === 'saving'}
+                autoFocus
+                maxLength={100}
+              />
+              <button
+                className="save-quiz-confirm"
+                onClick={handleConfirmSave}
+                disabled={saveState === 'saving' || !quizName.trim()}
+              >
+                {saveState === 'saving' ? 'Saving...' : 'Save'}
+              </button>
+            </div>
+          )}
+
+          {saveState === 'error' && (
+            <p className="save-quiz-error">{errorMsg}</p>
+          )}
+        </div>
+      )}
+
+      {saveState === 'saved' && (
+        <div className="save-quiz-section">
+          <p className="save-quiz-success">Quiz saved successfully!</p>
+        </div>
+      )}
 
       <div className="review-section">
         <h3>Review Questions</h3>
