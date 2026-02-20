@@ -27,7 +27,6 @@ An AI-powered quiz generator that creates custom multiple-choice quizzes from an
 ### Prerequisites
 
 - Node.js 18+
-- A Groq API key ([Get one here](https://console.groq.com))
 - A Supabase project ([Create one here](https://supabase.com))
 
 ### Installation
@@ -43,7 +42,6 @@ npm install
 Create a `.env` file in the project root:
 
 ```
-REACT_APP_GROQ_API_KEY=your_groq_api_key
 REACT_APP_SUPABASE_URL=your_supabase_project_url
 REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
@@ -108,9 +106,10 @@ npm run deploy
 
 You'll need to add these secrets in your GitHub repo settings (Settings → Secrets → Actions):
 
-- `REACT_APP_GROQ_API_KEY`
 - `REACT_APP_SUPABASE_URL`
 - `REACT_APP_SUPABASE_ANON_KEY`
+
+The Groq API key is stored as a Supabase Edge Function secret (`GROQ_API_KEY`) — it never reaches the browser.
 
 ## Development Notes
 
