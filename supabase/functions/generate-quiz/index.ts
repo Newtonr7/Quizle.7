@@ -2,9 +2,14 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
 const GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { status: 200 });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
@@ -13,7 +18,7 @@ Deno.serve(async (req) => {
     if (!factsText || typeof factsText !== "string") {
       return new Response(
         JSON.stringify({ error: "factsText is required" }),
-        { status: 400, headers: { "Content-Type": "application/json" } },
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -21,7 +26,7 @@ Deno.serve(async (req) => {
     if (!apiKey) {
       return new Response(
         JSON.stringify({ error: "GROQ_API_KEY not configured" }),
-        { status: 500, headers: { "Content-Type": "application/json" } },
+        { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -65,7 +70,7 @@ Return ONLY a JSON array with this exact structure, no other text:
       const errorBody = await response.text();
       return new Response(
         JSON.stringify({ error: `Groq API error: ${response.status}`, details: errorBody }),
-        { status: 502, headers: { "Content-Type": "application/json" } },
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
@@ -82,18 +87,18 @@ Return ONLY a JSON array with this exact structure, no other text:
     if (!Array.isArray(quizData) || quizData.length === 0) {
       return new Response(
         JSON.stringify({ error: "Invalid quiz data structure from LLM" }),
-        { status: 502, headers: { "Content-Type": "application/json" } },
+        { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
     return new Response(
       JSON.stringify(quizData),
-      { status: 200, headers: { "Content-Type": "application/json" } },
+      { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {
     return new Response(
       JSON.stringify({ error: error.message }),
-      { status: 500, headers: { "Content-Type": "application/json" } },
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   }
 });
