@@ -36,7 +36,41 @@
 
 .nav-auth {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-user-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.user-email {
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.sign-out-btn {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sign-out-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+  transform: none;
+  box-shadow: none;
 }
 
 .my-quizzes-btn {
@@ -181,4 +215,29 @@
 .close-btn:hover {
   background: rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
+}
+
+/* Responsive navbar */
+@media (max-width: 768px) {
+  .nav-bar {
+    padding: 12px 16px;
+  }
+
+  .nav-auth {
+    gap: 8px;
+  }
+
+  .my-quizzes-btn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .sign-out-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+
+  .user-email {
+    font-size: 12px;
+  }
 }

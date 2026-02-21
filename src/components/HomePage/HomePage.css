@@ -53,6 +53,7 @@
   width: 100%;
   max-width: 600px;
   position: relative;
+  text-align: center;
 }
 
 /* Modern textarea with better UX */
