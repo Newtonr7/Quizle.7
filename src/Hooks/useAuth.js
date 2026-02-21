@@ -1,15 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, createContext, useContext } from 'react';
 import { auth } from '../services/supabase';
 
-export const useAuth = () => {
+const AuthContext = createContext(null);
+
+export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
-      setLoading(false);
-    });
+    auth.getUser()
+      .then(({ data: { user } }) => {
+        setUser(user);
+        setLoading(false);
+      })
+      .catch(() => {
+        setUser(null);
+        setLoading(false);
+      });
 
     const { data: { subscription } } = auth.onAuthChange((event, session) => {
       setUser(session?.user ?? null);
@@ -31,12 +38,19 @@ export const useAuth = () => {
 
   const signOut = () => auth.signOut();
 
-  return {
-    user,
-    loading,
-    signIn,
-    signUp,
-    signOut,
-    isAuthenticated: !!user,
-  };
+  const value = { user, loading, signIn, signUp, signOut, isAuthenticated: !!user };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };
