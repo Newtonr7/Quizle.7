@@ -57,7 +57,7 @@ const NavBar = ({ user, onMyQuizzes }) => {
         <div className="nav-auth">
           {user ? (
             <>
-              <span className="user-email">{user.email.split('@')[0]}</span>
+              <span className="user-email">{user.email ? user.email.split('@')[0] : 'User'}</span>
               <button className="my-quizzes-btn" onClick={onMyQuizzes}>
                 My Quizzes
               </button>
