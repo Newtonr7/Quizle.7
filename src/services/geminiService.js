@@ -51,6 +51,6 @@ export async function generateQuiz(factsText) {
     }
   } catch (error) {
     console.error('Quiz generation error:', error);
-    return mockQuizData;
+    throw error;
   }
 }
