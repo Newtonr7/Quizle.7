@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import './App.css';
-import { useAuth } from './Hooks/useAuth';
+import { useAuth, AuthProvider } from './Hooks/useAuth';
 import { quizzes } from './services/supabase';
 import NavBar from './components/NavBar/NavBar';
 import HomePage from './components/HomePage/HomePage';
@@ -15,6 +15,7 @@ function AppContent() {
   const navigate = useNavigate();
   const [quizData, setQuizData] = useState([]);
   const [userAnswers, setUserAnswers] = useState([]);
+  const [quizKey, setQuizKey] = useState(0);
   const [toast, setToast] = useState(null);
 
   const showToast = useCallback((message) => {
@@ -44,6 +45,8 @@ function AppContent() {
   };
 
   const restartQuiz = () => {
+    setUserAnswers([]);
+    setQuizKey(prev => prev + 1);
     navigate('/quiz');
   };
 
@@ -54,6 +57,7 @@ function AppContent() {
   const retakeQuiz = (quizId, questions) => {
     setQuizData(questions);
     setUserAnswers([]);
+    setQuizKey(prev => prev + 1);
     navigate('/quiz');
   };
 
@@ -64,6 +68,9 @@ function AppContent() {
 
     const { data, error } = await quizzes.save(user.id, quizName, quizData);
     if (error) throw error;
+    if (!data || data.length === 0) {
+      throw new Error('Failed to save quiz: no data returned');
+    }
 
     const quizId = data[0].id;
     const attemptResult = await quizzes.saveAttempt(user.id, quizId, score);
@@ -82,7 +89,7 @@ function AppContent() {
       <div className="App">
         <header className="App-header">
           <h1>Quizle</h1>
-          {user && <p>Welcome back, {user.email.split('@')[0]}!</p>}
+          {user && <p>Welcome back, {user.email ? user.email.split('@')[0] : 'User'}!</p>}
         </header>
         <main>
           <Routes>
@@ -91,7 +98,7 @@ function AppContent() {
               path="/quiz"
               element={
                 quizData.length > 0
-                  ? <QuizPage quizData={quizData} onComplete={goToResults} />
+                  ? <QuizPage key={quizKey} quizData={quizData} onComplete={goToResults} />
                   : <Navigate to="/" replace />
               }
             />
@@ -133,9 +140,11 @@ function AppContent() {
 
 function App() {
   return (
-    <HashRouter>
-      <AppContent />
-    </HashRouter>
+    <AuthProvider>
+      <HashRouter>
+        <AppContent />
+      </HashRouter>
+    </AuthProvider>
   );
 }
 

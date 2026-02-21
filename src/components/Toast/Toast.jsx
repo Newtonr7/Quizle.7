@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Toast.css';
 
 function Toast({ message, onClose }) {
   const [visible, setVisible] = useState(true);
+  const innerTimerRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setVisible(false);
-      setTimeout(onClose, 300);
+      innerTimerRef.current = setTimeout(onClose, 300);
     }, 3000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      clearTimeout(innerTimerRef.current);
+    };
   }, [onClose]);
 
   return (

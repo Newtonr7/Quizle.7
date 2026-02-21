@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { supabase, supabaseKey } from './supabase';
 
 // Mock quiz data for development and API fallback
 const mockQuizData = [
@@ -37,6 +37,7 @@ export async function generateQuiz(factsText) {
 
     const { data, error } = await supabase.functions.invoke('generate-quiz', {
       body: { factsText },
+      headers: { Authorization: `Bearer ${supabaseKey}` },
     });
 
     if (error) {
@@ -50,6 +51,6 @@ export async function generateQuiz(factsText) {
     }
   } catch (error) {
     console.error('Quiz generation error:', error);
-    return mockQuizData;
+    throw error;
   }
 }
