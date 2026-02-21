@@ -57,15 +57,15 @@ const NavBar = ({ user, onMyQuizzes }) => {
         <div className="nav-auth">
           {user ? (
             <>
+              <button className="my-quizzes-btn" onClick={onMyQuizzes}>
+                My Quizzes
+              </button>
               <div className="nav-user-group">
                 <span className="user-email">{user.email ? user.email.split('@')[0] : 'User'}</span>
-                <button className="my-quizzes-btn" onClick={onMyQuizzes}>
-                  My Quizzes
+                <button className="sign-out-btn" onClick={handleSignOut}>
+                  Sign Out
                 </button>
               </div>
-              <button className="sign-out-btn" onClick={handleSignOut}>
-                Sign Out
-              </button>
             </>
           ) : (
             <button
