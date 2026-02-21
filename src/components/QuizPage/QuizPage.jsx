@@ -123,7 +123,7 @@ function QuizPage({ quizData, onComplete }) {
         <button
           className="next-button"
           onClick={handleNext}
-          disabled={selectedAnswer === null}
+          disabled={selectedAnswer === null || showFeedback}
           type="button"
         >
           {currentQuestionIndex < quizData.length - 1 ? 'Next Question' : 'See Results'}
