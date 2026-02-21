@@ -36,11 +36,15 @@ function HomePage({ onQuizGenerated }) {
       <form onSubmit={handleSubmit}>
         <textarea
           rows="10"
+          maxLength={5000}
           placeholder="Enter facts here (e.g., 'The Earth orbits the Sun. Water freezes at 0°C. The human body has 206 bones.')"
           value={facts}
           onChange={(e) => setFacts(e.target.value)}
           disabled={isLoading}
         />
+        {facts.length > 4000 && (
+          <p className="char-count">{facts.length}/5000 characters</p>
+        )}
 
         <button type="submit" disabled={isLoading}>
           {isLoading ? (
