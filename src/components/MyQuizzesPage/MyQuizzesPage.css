@@ -125,6 +125,13 @@
   opacity: 0.4;
 }
 
+.quiz-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: 20px;
+  flex-shrink: 0;
+}
+
 .retake-btn {
   background: var(--gradient);
   border: none;
@@ -136,12 +143,110 @@
   color: white;
   transition: all 0.3s ease;
   white-space: nowrap;
-  margin-left: 20px;
 }
 
 .retake-btn:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 20px rgba(108, 99, 255, 0.4);
+}
+
+.delete-btn {
+  background: transparent;
+  border: 1px solid var(--error);
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--error);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.delete-btn:hover {
+  background: var(--error);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 92, 92, 0.3);
+}
+
+/* Delete Confirmation Modal */
+.delete-modal {
+  background: var(--bg-card);
+  padding: 32px;
+  border-radius: var(--radius);
+  width: 400px;
+  max-width: 90vw;
+  box-shadow: var(--shadow);
+}
+
+.delete-modal h3 {
+  color: var(--text-primary);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.delete-modal p {
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.delete-modal p strong {
+  color: var(--text-primary);
+}
+
+.delete-modal .error-message {
+  margin-bottom: 16px;
+}
+
+.delete-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancel-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.confirm-delete-btn {
+  background: var(--error);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.confirm-delete-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 92, 92, 0.4);
+}
+
+.confirm-delete-btn:disabled,
+.cancel-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 @media (max-width: 768px) {
@@ -155,14 +260,29 @@
     gap: 16px;
   }
 
-  .retake-btn {
+  .quiz-card-actions {
     margin-left: 0;
     width: 100%;
+  }
+
+  .retake-btn,
+  .delete-btn {
+    flex: 1;
     text-align: center;
     padding: 12px 24px;
   }
 
   .quiz-card-meta {
     flex-wrap: wrap;
+  }
+
+  .delete-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancel-btn,
+  .confirm-delete-btn {
+    width: 100%;
+    text-align: center;
   }
 }

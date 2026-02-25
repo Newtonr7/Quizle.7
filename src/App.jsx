@@ -125,6 +125,7 @@ function AppContent() {
                       user={user}
                       onRetakeQuiz={retakeQuiz}
                       onNavigateHome={goToHome}
+                      showToast={showToast}
                     />
                   : <Navigate to="/" replace />
               }

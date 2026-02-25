@@ -40,4 +40,10 @@ export const quizzes = {
 
   saveAttempt: (userId, quizId, score) =>
     supabase ? supabase.from('attempts').insert({ user_id: userId, quiz_id: quizId, score }) : noOp(),
+
+  delete: async (userId, quizId) => {
+    if (!supabase) return noOp();
+    await supabase.from('attempts').delete().eq('quiz_id', quizId);
+    return supabase.from('quizzes').delete().eq('id', quizId).eq('user_id', userId);
+  },
 };

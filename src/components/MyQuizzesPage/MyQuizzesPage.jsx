@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { quizzes } from '../../services/supabase';
 import './MyQuizzesPage.css';
 
-function MyQuizzesPage({ user, onRetakeQuiz, onNavigateHome }) {
+function MyQuizzesPage({ user, onRetakeQuiz, onNavigateHome, showToast }) {
   const [quizList, setQuizList] = useState([]);
   const [attemptsMap, setAttemptsMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -43,6 +46,23 @@ function MyQuizzesPage({ user, onRetakeQuiz, onNavigateHome }) {
 
     fetchData();
   }, [user]);
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      const { error: err } = await quizzes.delete(user.id, deleteTarget.id);
+      if (err) throw err;
+      setQuizList((prev) => prev.filter((q) => q.id !== deleteTarget.id));
+      setDeleteTarget(null);
+      showToast('Quiz deleted');
+    } catch (err) {
+      setDeleteError('Failed to delete quiz. Please try again.');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -105,16 +125,50 @@ function MyQuizzesPage({ user, onRetakeQuiz, onNavigateHome }) {
                   )}
                 </div>
               </div>
-              <button
-                className="retake-btn"
-                onClick={() => onRetakeQuiz(quiz.id, quiz.questions)}
-              >
-                Retake
-              </button>
+              <div className="quiz-card-actions">
+                <button
+                  className="retake-btn"
+                  onClick={() => onRetakeQuiz(quiz.id, quiz.questions)}
+                >
+                  Retake
+                </button>
+                <button
+                  className="delete-btn"
+                  onClick={() => setDeleteTarget(quiz)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           );
         })}
       </div>
+
+      {deleteTarget && (
+        <div className="modal-overlay" onClick={() => { if (!deleting) setDeleteTarget(null); }}>
+          <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Delete Quiz</h3>
+            <p>Are you sure you want to delete <strong>{deleteTarget.title}</strong>? This will also remove all attempt history for this quiz.</p>
+            {deleteError && <div className="error-message">{deleteError}</div>}
+            <div className="delete-modal-actions">
+              <button
+                className="cancel-btn"
+                onClick={() => setDeleteTarget(null)}
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+              <button
+                className="confirm-delete-btn"
+                onClick={handleDelete}
+                disabled={deleting}
+              >
+                {deleting ? 'Deleting...' : 'Delete'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
